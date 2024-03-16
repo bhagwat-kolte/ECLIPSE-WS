@@ -1,182 +1,204 @@
 package com.amol.ems.data;
 
 import java.io.Serializable;
-import java.util.Date;
-
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.NamedQuery;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 
 /**
- * The persistent class for the employee database table.
+ * The persistent class for the employees database table.
  * 
  */
 @Entity
+@Table(name="employees")
 @NamedQuery(name="Employee.findAll", query="SELECT e FROM Employee e")
 public class Employee implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private long id;
+	@Column(name="employee_id")
+	private int employeeId;
 
-	private String code;
+	private String email;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date createdAt;
+	@Column(name="first_name")
+	private String firstName;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date endsAt;
+	@Temporal(TemporalType.DATE)
+	@Column(name="hire_date")
+	private Date hireDate;
 
-	@Lob
-	private String notes;
+	@Column(name="last_name")
+	private String lastName;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date startsAt;
+	@Column(name="phone_number")
+	private String phoneNumber;
 
-	private short status;
+	private BigDecimal salary;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	private Date updatedAt;
+	//bi-directional many-to-one association to Dependent
+	@OneToMany(mappedBy="employee")
+	private List<Dependent> dependents;
 
-	//bi-directional many-to-one association to User
+	//bi-directional many-to-one association to Job
 	@ManyToOne
-	@JoinColumn(name="createdBy")
-	private User user1;
+	@JoinColumn(name="job_id")
+	private Job job;
 
-	//bi-directional many-to-one association to User
+	//bi-directional many-to-one association to Department
 	@ManyToOne
-	@JoinColumn(name="updatedBy")
-	private User user2;
+	@JoinColumn(name="department_id")
+	private Department department;
 
-	//bi-directional many-to-one association to Organization
+	//bi-directional many-to-one association to Employee
 	@ManyToOne
-	@JoinColumn(name="organizationId")
-	private Organization organization;
+	@JoinColumn(name="manager_id")
+	private Employee employee;
 
-	//bi-directional many-to-one association to Role
-	@ManyToOne
-	@JoinColumn(name="roleId")
-	private Role role;
-
-	//bi-directional many-to-one association to User
-	@ManyToOne
-	@JoinColumn(name="userId")
-	private User user3;
+	//bi-directional many-to-one association to Employee
+	@OneToMany(mappedBy="employee")
+	private List<Employee> employees;
 
 	public Employee() {
 	}
 
-	public long getId() {
-		return this.id;
+	public int getEmployeeId() {
+		return this.employeeId;
 	}
 
-	public void setId(long id) {
-		this.id = id;
+	public void setEmployeeId(int employeeId) {
+		this.employeeId = employeeId;
 	}
 
-	public String getCode() {
-		return this.code;
+	public String getEmail() {
+		return this.email;
 	}
 
-	public void setCode(String code) {
-		this.code = code;
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
-	public Date getCreatedAt() {
-		return this.createdAt;
+	public String getFirstName() {
+		return this.firstName;
 	}
 
-	public void setCreatedAt(Date createdAt) {
-		this.createdAt = createdAt;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public Date getEndsAt() {
-		return this.endsAt;
+	public Date getHireDate() {
+		return this.hireDate;
 	}
 
-	public void setEndsAt(Date endsAt) {
-		this.endsAt = endsAt;
+	public void setHireDate(Date hireDate) {
+		this.hireDate = hireDate;
 	}
 
-	public String getNotes() {
-		return this.notes;
+	public String getLastName() {
+		return this.lastName;
 	}
 
-	public void setNotes(String notes) {
-		this.notes = notes;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public Date getStartsAt() {
-		return this.startsAt;
+	public String getPhoneNumber() {
+		return this.phoneNumber;
 	}
 
-	public void setStartsAt(Date startsAt) {
-		this.startsAt = startsAt;
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 
-	public short getStatus() {
-		return this.status;
+	public BigDecimal getSalary() {
+		return this.salary;
 	}
 
-	public void setStatus(short status) {
-		this.status = status;
+	public void setSalary(BigDecimal salary) {
+		this.salary = salary;
 	}
 
-	public Date getUpdatedAt() {
-		return this.updatedAt;
+	public List<Dependent> getDependents() {
+		return this.dependents;
 	}
 
-	public void setUpdatedAt(Date updatedAt) {
-		this.updatedAt = updatedAt;
+	public void setDependents(List<Dependent> dependents) {
+		this.dependents = dependents;
 	}
 
-	public User getUser1() {
-		return this.user1;
+	public Dependent addDependent(Dependent dependent) {
+		getDependents().add(dependent);
+		dependent.setEmployee(this);
+
+		return dependent;
 	}
 
-	public void setUser1(User user1) {
-		this.user1 = user1;
+	public Dependent removeDependent(Dependent dependent) {
+		getDependents().remove(dependent);
+		dependent.setEmployee(null);
+
+		return dependent;
 	}
 
-	public User getUser2() {
-		return this.user2;
+	public Job getJob() {
+		return this.job;
 	}
 
-	public void setUser2(User user2) {
-		this.user2 = user2;
+	public void setJob(Job job) {
+		this.job = job;
 	}
 
-	public Organization getOrganization() {
-		return this.organization;
+	public Department getDepartment() {
+		return this.department;
 	}
 
-	public void setOrganization(Organization organization) {
-		this.organization = organization;
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
-	public Role getRole() {
-		return this.role;
+	public Employee getEmployee() {
+		return this.employee;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
 	}
 
-	public User getUser3() {
-		return this.user3;
+	public List<Employee> getEmployees() {
+		return this.employees;
 	}
 
-	public void setUser3(User user3) {
-		this.user3 = user3;
+	public void setEmployees(List<Employee> employees) {
+		this.employees = employees;
+	}
+
+	public Employee addEmployee(Employee employee) {
+		getEmployees().add(employee);
+		employee.setEmployee(this);
+
+		return employee;
+	}
+
+	public Employee removeEmployee(Employee employee) {
+		getEmployees().remove(employee);
+		employee.setEmployee(null);
+
+		return employee;
 	}
 
 }
