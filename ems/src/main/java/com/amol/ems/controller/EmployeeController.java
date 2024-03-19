@@ -4,9 +4,14 @@
 package com.amol.ems.controller;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
-
+import java.util.Locale;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -92,8 +97,9 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/employee/hireDate")
-	public List<EmployeeBean> getEmployeesByHireDate(@RequestParam("hireDate") Date hireDate){
-		List<EmployeeBean> employees = employeeService.getEmployeesByHireDate(hireDate);
+	public List<EmployeeBean> getEmployeesByHireDate(@RequestParam("hireDate") String hireDate) throws ParseException{
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd", Locale.ENGLISH);
+		List<EmployeeBean> employees = employeeService.getEmployeesByHireDate(formatter.parse(hireDate));
 		
 		if(null == employees || employees.isEmpty() || employees.size() == 0) {
 			throw new EmployeeNotFoundException("No Employee found : " + hireDate);

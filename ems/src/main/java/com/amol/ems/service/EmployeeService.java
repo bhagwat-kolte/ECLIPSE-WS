@@ -41,7 +41,8 @@ public class EmployeeService {
 	EmployeeBean employeeBean = null;
 	
 	public List<EmployeeBean> getAllEmployee(){
-		
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findAll();
 		
 		employees.forEach(em ->{employeeBeans.add(moveEmployeeDataTOBean(em));
@@ -60,6 +61,8 @@ public class EmployeeService {
 	}
 	
 	public List<EmployeeBean> getEmployeesByFirstName(String firstName){
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findByFirstName(firstName);
 		if(employees.size() > 0) {			
 			employees.forEach(em -> employeeBeans.add(moveEmployeeDataTOBean(em)));
@@ -68,6 +71,8 @@ public class EmployeeService {
 	}
 	
 	public List<EmployeeBean> getEmployeesByLastName(String lastName){
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findByLastName(lastName);
 		
 		if(employees.size() > 0) {		
@@ -77,7 +82,9 @@ public class EmployeeService {
 		return employeeBeans;
 	}
 	
-	public List<EmployeeBean> getEmployeesByName(String firstName, String lastName){		
+	public List<EmployeeBean> getEmployeesByName(String firstName, String lastName){
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findByName(firstName, lastName);
 		
 		if(employees.size() > 0)
@@ -87,6 +94,8 @@ public class EmployeeService {
 	}
 	
 	public List<EmployeeBean> getEmployeesByHireDate(Date hireDate){
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findByHireDate(hireDate);
 		
 		if(employees.size() > 0)
@@ -95,6 +104,8 @@ public class EmployeeService {
 	}
 	
 	public List<EmployeeBean> getEmployeesByPhoneNumber(String phoneNumber){
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findByPhoneNumber(phoneNumber);
 		
 		if(employees.size() > 0)
@@ -104,6 +115,8 @@ public class EmployeeService {
 	}
 	
 	public List<EmployeeBean> getEmployeesBySalary(BigDecimal salary){
+		employees.clear();
+		employeeBeans.clear();
 		employees = employeeRepository.findBySalary(salary);
 		
 		if(employees.size() > 0)
